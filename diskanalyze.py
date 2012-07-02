@@ -114,6 +114,8 @@ if __name__ == "__main__":
 			os.remove( filename)
 
 		conn = sqlite3.connect( filename)
+		conn.text_factory = str
+
 	except Exception, e:
 		print "Error: %s" % ( e)
 		sys.exit( 1)
