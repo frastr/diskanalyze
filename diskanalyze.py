@@ -4,6 +4,7 @@
 import sys
 import os
 import os.path
+import string
 import sqlite3
 
 
@@ -38,8 +39,8 @@ def analyzeDir( conn, directory):
 			% ( directory.replace( "'", "''"), filename.replace( "'", "''"), size))
 
 	# directory summary
-	conn.execute( "insert into summary ( path, size) values ( '%s', %d)" \
-		% ( directory.replace( "'", "''"), size_total))
+	conn.execute( "insert into summary ( path, level, size) values ( '%s', %d, %d)" \
+		% ( directory.replace( "'", "''"), directory.count( os.path.sep), size_total))
 
 	return size_total
 
@@ -86,7 +87,7 @@ def analyzeData( conn):
 	print ""
 	print "Summary directorys, sorted by size:"
 	print "----------------------------------------"
-	cur.execute( 'select path, size from summary order by size desc, path');
+	cur.execute( 'select path, size from summary where level <= (select min( level) from summary) order by size desc, path limit 25');
 	rows = cur.fetchall()
 
 	for row in rows:
@@ -123,12 +124,12 @@ if __name__ == "__main__":
 
 	# Create tables
 	conn.execute( "create table files ( type char(1), path text, filename text, size number, blocks number)")
-	conn.execute( "create table summary ( path text, size number, blocks number)")
+	conn.execute( "create table summary ( path text, level number, size number, blocks number)")
 
 	# Analyse disk usage
 	hasError = False
 	try:
-		analyzeDir( conn, rootdir)
+		analyzeDir( conn, string.rstrip( rootdir, os.path.sep))
 		analyzeData( conn)
 
 	except Exception, e:
