@@ -72,7 +72,7 @@ def analyzeData( conn):
 	cur = conn.cursor()
 
 	# 1 - Statistics
-	cur.execute( 'select type, count(*) cnt from files group by type');
+	cur.execute( 'select type, count(*) cnt from files group by type')
 	rows = cur.fetchall()
 
 	print ""
@@ -88,7 +88,7 @@ def analyzeData( conn):
 	print ""
 	print "Summary directorys, sorted by size:"
 	print "----------------------------------------"
-	cur.execute( 'select path, size from summary where level <= (select min( level) from summary) order by size desc, path limit 25');
+	cur.execute( 'select path, size from summary where level <= (select min( level) from summary) order by size desc, path limit 25')
 	rows = cur.fetchall()
 
 	for row in rows:
