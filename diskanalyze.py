@@ -66,6 +66,7 @@ def analyzeData( conn):
 	# Create indexes
 	conn.execute( "create index i_files_type on files ( type)")
 	conn.execute( "create index i_summary_size on summary ( size)")
+	conn.execute( "create index i_summary_levelpath on summary ( level, path)")
 
 	# Analysis
 	cur = conn.cursor()
