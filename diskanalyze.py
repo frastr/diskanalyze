@@ -130,7 +130,10 @@ if __name__ == "__main__":
 	# Analyse disk usage
 	hasError = False
 	try:
-		analyzeDir( conn, string.rstrip( rootdir, os.path.sep))
+		if rootdir != os.path.sep:
+			rootdir = string.rstrip( rootdir, os.path.sep)
+
+		analyzeDir( conn, rootdir)
 		analyzeData( conn)
 
 	except Exception, e:
